@@ -1,0 +1,6 @@
+[package]
+name = "min-typst"
+version = "1.0.0"
+entrypoint = "template.typ"
+authors = ["ibijon"]
+license = "MIT"
