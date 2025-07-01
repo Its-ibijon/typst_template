@@ -1,24 +1,23 @@
 
 #let chapter(chapter) =counter(heading).update(chapter -1) 
 #let name(name) = name
-#let template(doc) = {
-  show math.equation: set text(font: "Fira Math")
-  set text(font: "Fira Math")
-  show outline: it => {
-  show heading: none
-  it
-}
-  set page(numbering: "1 of 1")
+
+#let template(
+  doc,
+  font: "Fira Math",
+  margins: (left: 90pt, right: 90pt)
+) = {
+  show math.equation: set text(font: font)
+  set text(font: font)
+  
+  set page(
+    numbering: "1",
+    margin: margins,
+  )
   
   show strong: it => $bold(it)$
   show emph: it => $italic(it)$
- 
-show outline: it => {
-  show heading: none
-  v(1em)
-  it
-}
-
+  
 show outline.entry: it => {
   v(1em, weak: true)
   let page-num = counter(page).at(it.element.location()).first()
@@ -59,8 +58,8 @@ h(3em)
 #let h1(body) = {
   counter(heading).step()
   v(1.2em, weak: true)
-  set text(size: 30pt, weight: "bold")
-  context place(dx: -0.6in)[#text(size: 40pt,counter(heading).display())]
+  set text(size: 25pt, weight: "bold")
+  context place(dx: -0.6in)[#text(size: 35pt,counter(heading).display())]
   heading(level: 1)[#body]
   v(0.6em, weak: true)
 }
@@ -68,8 +67,8 @@ h(3em)
 #let h2(body) = {
   counter(heading).step(level:2)
   v(1.2em, weak: true)
-  set text(size: 24pt, weight: "bold")
-  context place(dx: -0.6in)[#text(size: 28pt,counter(heading).display())]
+  set text(size: 20pt, weight: "bold")
+  context place(dx: -0.6in)[#text(size: 25pt,counter(heading).display())]
   heading(level: 2)[#body]
   v(0.6em, weak: true)
 }
@@ -77,8 +76,8 @@ h(3em)
 #let h3(body) = {
   counter(heading).step(level:3)
   v(1.2em, weak: true)
-  set text(size: 18pt, weight: "bold")
-  context place(dx: -0.6in)[#text(size: 18pt,counter(heading).display())]
+  set text(size: 15pt, weight: "bold")
+  context place(dx: -0.6in)[#text(size: 15pt,counter(heading).display())]
   heading(level: 3)[#body]
   v(0.6em, weak: true)
 }
@@ -125,6 +124,42 @@ h(3em)
   ]
 }
 
+
+#let ibox(opt,number, body) = { align(center + horizon)[
+  #v(15pt)
+  #block(
+    radius: 5pt,
+    width: 100%,
+    stroke: 1pt, 
+    inset: 0pt,
+    fill: none,
+    breakable: true  
+  )[
+    #place(
+      top + left,
+      dx: 10pt,
+      dy: -10pt,
+      rect(
+        radius: 5pt,
+        stroke: 1pt ,
+        inset: 8pt,
+        fill: white
+      )[
+        #text( weight: "bold")[#opt #number]
+      ]
+    )
+    #pad(
+      top: 1.5em,
+      left: 0.5em,
+      right: 0.5em,
+      bottom: 0.5em
+    )[
+      #text()[#body]
+    ]
+  ]]
+}
+
+
 #let bbox(body) = {
   v(15pt)
   block(
@@ -154,7 +189,7 @@ h(3em)
 #let proposition(number, body) = lbox("Proposition", number,body)
 #let example(number, body) = lbox("Example", number,body)
 #let proof(number, body) = lbox("Proof", number)[#align(left,body)]
-#let img(number,body,def) = lbox("Image",number)[#align(center,body) #text(size:9pt,stroke:gray.darken(50%),)[#def]]
+#let img(number,body,def) = ibox("Image",number)[#align(center,body) #text[#def]]
 #let todo(body) = rect(fill: orange.lighten(90%), stroke: orange, inset: 5pt)[*TODO:* #body]
 #let remark(number, body) = lbox("Remark", number, body)
 #let note(number, body) = lbox("Note", number, body)
@@ -181,49 +216,35 @@ h(3em)
 #let c(body) = align(center)[#body]
 #let barrier = rect(width: 100%, height: 0%)
 
-#let mdbox(body1,body2)= {
-grid(columns: (1fr,1fr),gutter:10pt)[#bbox(body1)][#bbox(body2)]
-}
+#let mdbox(body1,body2)= { grid(columns: (1fr,1fr),gutter:10pt)[#bbox(body1)][#bbox(body2)] }
 
-#let mtbox(body1,body2,body3)= {
-grid(columns: (1fr,1fr,1fr),gutter:10pt)[#bbox(body1)][#bbox(body2)][#bbox(body3)]
+#let mtbox(body1,body2,body3)= { grid(columns: (1fr,1fr,1fr),gutter:10pt)[#bbox(body1)][#bbox(body2)][#bbox(body3)]
 }
 
 
 
 #let adbox(body) = {
   v(15pt)
-  columns(2, gutter: 10pt)[
-    #block(
-      radius: 5pt,
-      width: 100%,
-      stroke: 1pt, 
-      inset: 1em,
-      fill: none,
-      breakable: true,
-      height: auto
-    )[
-      #body
-    ]
-  ]
+  columns(2, gutter: 10pt)[ #block( radius: 5pt, width: 100%, stroke: 1pt, inset: 1em, fill: none, breakable: true, height: auto)[ #body ] ]
 }
 
 
 #let atbox(body) = {
   v(15pt)
-  columns(3, gutter: 10pt)[
-    #block(
-      radius: 5pt,
-      width: 100%,
-      stroke: 1pt, 
-      inset: 1em,
-      fill: none,
-      breakable: true,
-      height: auto
-    )[
-      #body
-    ]
-  ]
+  columns(3, gutter: 10pt)[ #block( radius: 5pt, width: 100%, stroke: 1pt, inset: 1em, fill: none, breakable: true, height: auto)[ #body ] ]
+}
+#let nl = linebreak()
+#let iadbox(body) = {
+  v(15pt)
+  columns(2, gutter: 10pt)[ #block( radius: 5pt, width: 100%, stroke: 1pt+white, inset: 1em, fill: none, breakable: true, height: auto)[ #body ] ] }
+#let contents = [#lbox("Contents","")[#outline(depth: 2)] #pagebreak()]
+
+#let big-math(size: 18pt, body) = text(size: size)[$ #body $]
+
+#let space(num)={
+  for i in range(num) [
+  #linebreak()
+]
+
 }
 
-#let contents = [#lbox("Contents","")[#outline()] #pagebreak()]

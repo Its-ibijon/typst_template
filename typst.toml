@@ -1,5 +1,5 @@
 [package]
-name = "min-typst"
+name = "clean-notes"
 version = "1.0.0"
 entrypoint = "template.typ"
 authors = ["ibijon"]
